@@ -7,7 +7,12 @@ from botocore.exceptions import ClientError
 
 
 logger = logging.getLogger(__name__)
-sqs = boto3.client('sqs', aws_access_key_id='AKIA5TQRTX42YZZM67FY', aws_secret_access_key='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', region_name='eu-west-2')
+
+aws_access_key_id=os.getenv('aws_access_key_id')
+aws_secret_access_key=os.getenv('aws_secret_access_key')
+region_name=os.getenv('region_name')
+
+sqs = boto3.client('sqs', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
 
 
 def create_queue(name, attributes=None):

@@ -1,4 +1,5 @@
 import logging
+import os
 import uuid
 
 import boto3
@@ -9,8 +10,12 @@ from botocore.exceptions import NoCredentialsError
 
 logger = logging.getLogger(__name__)
 
-s3 = boto3.client('s3', aws_access_key_id='AKIA5TQRTX42YZZM67FY', aws_secret_access_key='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', region_name='eu-west-2')
-rekognition = boto3.client('rekognition', aws_access_key_id='AKIA5TQRTX42YZZM67FY', aws_secret_access_key='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', region_name='eu-west-2')
+aws_access_key_id=os.getenv('aws_access_key_id')
+aws_secret_access_key=os.getenv('aws_secret_access_key')
+region_name=os.getenv('region_name')
+
+s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+rekognition = boto3.client('rekognition', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
 
 
 def process_file(url, bucket_name):

@@ -32,6 +32,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .idea
+config.json
 
 # C extensions
 *.so

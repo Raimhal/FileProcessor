@@ -1,12 +1,8 @@
 import json
-import logging
 import os
 
 import boto3
 from botocore.exceptions import ClientError
-
-
-logger = logging.getLogger(__name__)
 
 aws_access_key_id=os.getenv('aws_access_key_id')
 aws_secret_access_key=os.getenv('aws_secret_access_key')
@@ -24,19 +20,20 @@ def create_queue(name, attributes=None):
             QueueName=name,
             Attributes=attributes
         )
-        logger.info("Created queue '%s' with URL=%s", name, queue['QueueUrl'])
+        print("Created queue '%s' with URL=%s", name, queue['QueueUrl'])
     except ClientError as error:
-        logger.exception("Couldn't create queue named '%s'.", name)
+        print("[ERROR] Couldn't create queue named '%s'.", name)
         raise error
     else:
         return queue['QueueUrl']
 
 
-def get_queue_by_name(name):
+def get_queue_url_by_name(name):
     try:
         return sqs.get_queue_url(QueueName=name)['QueueUrl']
     except:
         return create_queue(name=os.getenv('QUEUE_NAME'), attributes={'VisibilityTimeout': "120"})
+
 
 def send_message(queue_url, message_body, message_attributes=None):
     if not message_attributes:
@@ -48,26 +45,20 @@ def send_message(queue_url, message_body, message_attributes=None):
             MessageBody=message_body,
             MessageAttributes=message_attributes
         )
-        logger.info("Send message successful: %s", message_body)
+        print("Send message successful: %s", message_body)
     except ClientError as error:
-        logger.exception("Send message failed: %s", message_body)
+        print("[ERROR] Send message failed: %s", message_body)
         raise error
+    except Exception as ex:
+        print(f"[ERROR] {ex}")
+        raise ex
     else:
         return response
 
-def receive_message(queue_url):
-    response = sqs.receive_message(
-        QueueUrl=queue_url,
-        AttributeNames=['All'])
-    try:
-        return json.loads(response.get('Messages', [])[0]['Body'])['fileUrl']
-    except IndexError as ex:
-        logger.exception("Queue is empty")
-        raise ex
 
 def get_file_url(data):
     try:
         return json.loads(data)['fileUrl']
     except Exception as ex:
-        logger.exception("Invalid message body")
+        print("[ERROR] Invalid message body")
         raise ex

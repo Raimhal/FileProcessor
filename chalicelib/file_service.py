@@ -7,8 +7,8 @@ import requests
 import mimetypes
 
 from botocore.exceptions import NoCredentialsError
+from requests.exceptions import MissingSchema
 
-logger = logging.getLogger(__name__)
 
 aws_access_key_id=os.getenv('aws_access_key_id')
 aws_secret_access_key=os.getenv('aws_secret_access_key')
@@ -19,7 +19,6 @@ rekognition = boto3.client('rekognition', aws_access_key_id=aws_access_key_id, a
 
 
 def process_file(url, bucket_name):
-    print(url)
     try:
         data = requests.get(url, stream=True).raw
 
@@ -30,12 +29,17 @@ def process_file(url, bucket_name):
         save_file(data, bucket_name, file_name)
         detect_text(file_name, bucket_name)
 
-    except FileNotFoundError as ex :
-        logger.exception("The file was not found")
+    except MissingSchema as ex:
+        print(f"[ERROR] Invalid url '{url}'")
         raise ex
-
+    except FileNotFoundError as ex :
+        print("[ERROR] The file was not found")
+        raise ex
     except NoCredentialsError as ex:
-        logger.exception("Credentials not available")
+        print("[ERROR] Credentials not available")
+        raise ex
+    except Exception as ex:
+        print("[ERROR] Something went wrong")
         raise ex
 
 
@@ -43,18 +47,20 @@ def detect_text(photo, bucket_name):
     response = rekognition.detect_text(Image={'S3Object': {'Bucket': bucket_name, 'Name': photo}})
     textDetections=response['TextDetections']
 
+
     if not len(textDetections):
-        logger.info(f"Photo '{photo}' doesn't have any text")
+        print(f"Photo '{photo}' doesn't have any text")
         return
+
 
     for text in textDetections:
         if text['Type'] != 'LINE':
             continue
-        logger.info('-'*60)
-        logger.info(f'Text: {text["DetectedText"]}')
-        logger.info(f'Confidence: {text["Confidence"]:.2f}%')
-        logger.info(f'Type: {text["Type"]}')
-    logger.info('-'*60)
+        print('-'*100)
+        print(f'Text: {text["DetectedText"]}')
+        print(f'Confidence: {text["Confidence"]:.2f}%')
+        print(f'Type: {text["Type"]}')
+    print('-'*100)
 
 
 def save_file(data, bucket_name, file_name):

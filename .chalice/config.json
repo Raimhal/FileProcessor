@@ -4,9 +4,10 @@
   "lambda_timeout" : 120,
   "environment_variables": {
     "QUEUE_NAME": "test-queue",
-    "aws_access_key_id": "AKIA5TQRTX42YZZM67FY",
-    "aws_secret_access_key": "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",
-    "region_name": "eu-west-2"
+    "aws_access_key_id": "AKIAXTWNB7DUHBZV7VX6",
+    "aws_secret_access_key": "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",
+    "region_name": "eu-west-2",
+    "bucket_name": "file-processor-bucket-radency"
   },
   "stages": {
     "dev": {

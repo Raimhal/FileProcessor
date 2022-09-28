@@ -34,7 +34,7 @@ def create_queue(name, attributes=None):
 
 def get_queue_by_name(name):
     try:
-        return sqs.get_queue_by_name(QueueName=name).__dict__['_url']
+        return sqs.get_queue_url(QueueName=name)['QueueUrl']
     except:
         return create_queue(name=os.getenv('QUEUE_NAME'), attributes={'VisibilityTimeout': "120"})
 
@@ -63,4 +63,11 @@ def receive_message(queue_url):
         return json.loads(response.get('Messages', [])[0]['Body'])['fileUrl']
     except IndexError as ex:
         logger.exception("Queue is empty")
+        raise ex
+
+def get_file_url(data):
+    try:
+        return json.loads(data)['fileUrl']
+    except Exception as ex:
+        logger.exception("Invalid message body")
         raise ex

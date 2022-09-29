@@ -33,6 +33,9 @@ __pycache__/
 *$py.class
 .idea
 .chalice
+**/config.json
+**config.json
+.chalice/config.json
 
 # C extensions
 *.so

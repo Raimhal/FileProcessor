@@ -24,6 +24,9 @@ def create_queue(name, attributes=None):
     except ClientError as error:
         print("[ERROR] Couldn't create queue named '%s'.", name)
         raise error
+    except Exception as ex:
+        print("[ERROR] '%s'", ex)
+        raise ex
     else:
         return queue['QueueUrl']
 
@@ -54,11 +57,3 @@ def send_message(queue_url, message_body, message_attributes=None):
         raise ex
     else:
         return response
-
-
-def get_file_url(data):
-    try:
-        return json.loads(data)['fileUrl']
-    except Exception as ex:
-        print("[ERROR] Invalid message body")
-        raise ex

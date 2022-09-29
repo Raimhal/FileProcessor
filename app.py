@@ -40,4 +40,6 @@ def handle_sqs_message(event):
 def handle_sqs_logs(event):
     for record in event:
         log(print, deserialize(record.body))
-# core => sqs => process => sqs => core
+
+
+# app >> /send_file >> s3 >> sqs >> rekognition >> sqs >> log >> app

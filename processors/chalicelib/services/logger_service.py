@@ -1,6 +1,6 @@
 
 
-def log(logger,detections):
+def log_detections(logger,detections):
     for text in detections:
         logger('-' * 100)
         logger(f'Text: {text["DetectedText"]}')

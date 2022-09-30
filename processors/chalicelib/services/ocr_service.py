@@ -3,8 +3,7 @@ import os
 
 import boto3
 
-from chalicelib.core.convertors import serialize
-from chalicelib.services.sqs_service import send_message
+from .sqs_service import send_message
 
 aws_access_key_id=os.getenv('aws_access_key_id')
 aws_secret_access_key=os.getenv('aws_secret_access_key')
@@ -20,7 +19,7 @@ def do_photo_ocr(photo, bucket_name, queue_url):
         print(f"Photo '{photo}' doesn't have any text")
         return
 
-    send_message(queue_url=queue_url, message_body=serialize(detections))
+    send_message(queue_url=queue_url, message_body=json.dumps(detections))
 
 
 def detect_text(photo, bucket_name):

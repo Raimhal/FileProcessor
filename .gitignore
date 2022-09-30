@@ -37,6 +37,9 @@ __pycache__/
 **config.json
 .chalice/config.json
 
+**/.chalice/deployments/**
+**/.chalice/venv/**
+
 # C extensions
 *.so
 

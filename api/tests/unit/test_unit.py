@@ -1,4 +1,4 @@
-from api.chalicelib.core import get_file_url
+from chalicelib.core import get_file_url
 
 
 def test_get_file_url():

@@ -2,11 +2,11 @@ import json
 
 from chalice.test import Client
 
-from api.app import app
+from app import app
 
 
 def test_send_file():
-    with Client(app.app) as client:
+    with Client(app) as client:
         response = client.http.post(
             '/send_file',
             headers={'Content-Type': 'application/json'},

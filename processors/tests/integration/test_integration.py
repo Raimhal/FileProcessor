@@ -1,15 +1,16 @@
 import json
 
 from chalice.test import Client
+from app import app
 
 #
 # code below will work if the problems with decorator 'on_sqs_message' will be fixed
 #
-from api.app import app
+
 
 
 def test_handle_sqs_message():
-    with Client(app.app) as client:
+    with Client(app) as client:
         event = client.events.generate_sqs_event(message_bodies=[json.dumps(
                 {
                     "fileUrl": "https://www.befunky.com/images/wp/wp-2018-05-Add-Text-To-Photos-37.jpg?auto=avif,webp&format=jpg&width=1150&crop=16:9"
@@ -21,7 +22,7 @@ def test_handle_sqs_message():
 
 
 def test_handle_sqs_detections():
-    with Client(app.app) as client:
+    with Client(app) as client:
         event = client.events.generate_sqs_event(message_bodies=[json.dumps(
             [
                 {

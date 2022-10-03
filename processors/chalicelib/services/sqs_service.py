@@ -35,7 +35,7 @@ def get_queue_url_by_name(name):
     try:
         return sqs.get_queue_url(QueueName=name)['QueueUrl']
     except:
-        return create_queue(name=os.getenv('QUEUE_NAME'), attributes={'VisibilityTimeout': "120"})
+        return create_queue(name=name, attributes={'VisibilityTimeout': "120"})
 
 
 def send_message(queue_url, message_body, message_attributes=None):

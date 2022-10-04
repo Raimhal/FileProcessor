@@ -1,12 +1,5 @@
-import json
-
 from chalice.test import Client
 from app import app
-
-#
-# code below will work if the problems with decorator 'on_sqs_message' will be fixed
-#
-
 
 
 def test_handle_sqs_message():

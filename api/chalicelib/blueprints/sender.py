@@ -2,8 +2,7 @@ import os
 
 from chalice import Blueprint, CognitoUserPoolAuthorizer, AuthResponse
 
-from chalicelib.core import get_file_url
-from chalicelib.services import decode_jwt
+from chalicelib.core import get_file_url, decode_jwt
 from chalicelib.services.file_service import upload_file
 from chalicelib.services.sqs_service import get_queue_url_by_name, send_message
 
@@ -20,5 +19,5 @@ def jwt_auth(auth_request):
 def send_file():
     queue_url = get_queue_url_by_name(name=os.getenv('QUEUE_NAME'))
     url = get_file_url(sender.current_request.json_body)
-    file_name = upload_file(url, os.getenv('bucket_name'))
+    file_name = upload_file(url, os.getenv("BUCKET_NAME"))
     send_message(queue_url=queue_url, message_body=file_name)
